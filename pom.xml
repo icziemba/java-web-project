@@ -26,4 +26,14 @@
       </plugin>
     </plugins>
   </build>
+  <scm>
+  	<url>https://github.com/icziemba/java-web-project</url>
+  </scm>
+  <dependencies>
+  	<dependency>
+  		<groupId>org.apache.tomcat</groupId>
+  		<artifactId>tomcat-servlet-api</artifactId>
+  		<version>8.0.38</version>
+  	</dependency>
+  </dependencies>
 </project>
