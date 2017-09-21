@@ -6,13 +6,14 @@ import java.sql.SQLException;
 
 import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
+import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
-import ziemba.ian.test2.gym.GymSystem.GymSystem;
+import ziemba.ian.test2.gym.GymSystem;
 
 /**
  * Servlet implementation class Login
@@ -32,12 +33,8 @@ public class Login extends HttpServlet {
 
     @Override
     public void init() throws ServletException {
-    	try {
-			gym = new GymSystem();
-		} catch (SQLException | NamingException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+    	ServletContext context = getServletContext();
+		gym = (GymSystem)context.getAttribute("gym");
     }
     
     
@@ -68,7 +65,7 @@ public class Login extends HttpServlet {
 			else {
 				out.println("Unsuccessfully logged in :(");
 			}
-		} catch (NullPointerException | NamingException e) {
+		} catch (NullPointerException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

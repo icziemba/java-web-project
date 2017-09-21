@@ -14,10 +14,10 @@ public class AuthenticationDBConnection {
 	private final String dbResource = "jdbc/Authentication";
 	private Connection connection = null;
 
-	public AuthenticationUser getAuthenticationUser(String userName) throws SQLException, NamingException {
-		connect();
+	public AuthenticationUser getAuthenticationUser(String userName) throws NamingException, SQLException {
+		this.connect();
 		AuthenticationUser user = null;
-		ResultSet resultSet = getUsers();
+		ResultSet resultSet = this.getUsers();
 		while(resultSet.next() && user == null) {
 			int authenticatedUserID = resultSet.getInt(1);
 			String authenticatedUserName = resultSet.getString(2);
@@ -27,13 +27,21 @@ public class AuthenticationDBConnection {
 				user = new AuthenticationUser(authenticatedUserID, authenticatedUserName, authenticatedUserPassword);
 			}
 		}
-		closeConnection();
+		this.close();
 		return user;
 	}
 	
+	public void insertAutenticationUser(AuthenticationUser user) throws NamingException, SQLException {
+		this.connect();
+		String command = String.format("INSERT INTO Users (userName, password) VALUES (%s, %s)", user.getUserName(), user.getPassword());
+		Statement statement = connection.createStatement();
+		statement.executeUpdate(command);
+		this.close();
+	}
+	
 	private ResultSet getUsers() throws SQLException, NamingException {
-		String command = "select * from Users";
-		return queryDB(command);
+		String command = "SELECT * FROM Users";
+		return this.queryDB(command);
 	}
 	
 	private ResultSet queryDB(String command) throws SQLException, NamingException {
@@ -46,7 +54,7 @@ public class AuthenticationDBConnection {
 		connection = new DBResource(dbResource).connect();
 	}
 	
-	private void closeConnection() throws SQLException {
+	private void close() throws SQLException {
 		connection.close();
 		connection = null;
 	}
