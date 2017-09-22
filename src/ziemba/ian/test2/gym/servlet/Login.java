@@ -2,18 +2,15 @@ package ziemba.ian.test2.gym.servlet;
 
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.sql.SQLException;
-
-import javax.naming.NamingException;
 import javax.servlet.RequestDispatcher;
-import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+import javax.servlet.http.HttpSession;
 
-import ziemba.ian.test2.gym.GymSystem;
+import ziemba.ian.test2.authentication.AuthenticationSystem;
 
 /**
  * Servlet implementation class Login
@@ -21,33 +18,21 @@ import ziemba.ian.test2.gym.GymSystem;
 @WebServlet(description = "User login for gym system.", urlPatterns = { "/login" })
 public class Login extends HttpServlet {
 	private static final long serialVersionUID = 1L;
-	private GymSystem gym;
-       
-    /**
-     * @see HttpServlet#HttpServlet()
-     */
-    public Login() {
-        super();
-        // TODO Auto-generated constructor stub
-    }
-
-    @Override
-    public void init() throws ServletException {
-    	ServletContext context = getServletContext();
-		gym = (GymSystem)context.getAttribute("gym");
-    }
-    
-    
-    public void destroy() {
-    	return;
-    }
+	
     
 	/**
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
-		dispatcher.forward(request, response);
+		
+		// Redirect to main page if http session is active
+		if(request.getSession(false) != null) {
+			gotoMain(response);
+		}
+		else {
+			RequestDispatcher dispatcher = this.getServletContext().getRequestDispatcher("/WEB-INF/views/loginView.jsp");
+			dispatcher.forward(request, response);
+		}
 	}
 
 	/**
@@ -58,14 +43,22 @@ public class Login extends HttpServlet {
 		String password = request.getParameter("password");
 		PrintWriter out = response.getWriter();
 		
+		boolean authenticated = AuthenticationSystem.authenticateUser(userName, password);
+		if(authenticated) {
+			HttpSession session = request.getSession(true);
+			session.setAttribute("userName", userName);
+			session.setMaxInactiveInterval(30);
+			gotoMain(response);
+		}
+		else {
+			out.println("Unsuccessfully logged in :(");
+		}
+	}
+	
+	private void gotoMain(HttpServletResponse response) {
 		try {
-			if(gym.login(userName, password)) {
-				out.println("Successfully logged in :)");
-			}
-			else {
-				out.println("Unsuccessfully logged in :(");
-			}
-		} catch (NullPointerException e) {
+			response.sendRedirect("main");
+		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}

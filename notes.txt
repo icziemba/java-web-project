@@ -1,0 +1,1 @@
+Link to remove package name from URL: https://stackoverflow.com/questions/2437465/how-to-change-context-root-of-a-dynamic-web-project-in-eclipse

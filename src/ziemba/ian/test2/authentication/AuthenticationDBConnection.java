@@ -4,20 +4,35 @@ import java.sql.Connection;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-
 import javax.naming.NamingException;
-
 import ziemba.ian.test2.tomcat.helpers.DBResource;
 
+/**
+ * Class used to interface with an Authentication database. This class is responsible for all the
+ * SQL commands for the database.
+ * @author icziemba
+ * @see AuthenticationSystem
+ * @see AuthenticationUser
+ */
 public class AuthenticationDBConnection {
 	
-	private final String dbResource = "jdbc/Authentication";
-	private Connection connection = null;
+	private final static String DB_RESOURCE = "jdbc/Authentication";
 
-	public AuthenticationUser getAuthenticationUser(String userName) throws NamingException, SQLException {
-		this.connect();
+	/**
+	 * Query the Authentication database for a specific user and get that user's information.
+	 * @param userName The user name to be queried.
+	 * @return AuthenticationUser representing the queried user.
+	 * @throws NamingException
+	 * @throws SQLException
+	 */
+	public static AuthenticationUser getAuthenticationUser(String userName) throws NamingException, SQLException {
+		Connection connection = DBResource.connect(DB_RESOURCE);
 		AuthenticationUser user = null;
-		ResultSet resultSet = this.getUsers();
+		
+		String command = "SELECT * FROM Users";
+		Statement statement = connection.createStatement();
+		ResultSet resultSet = statement.executeQuery(command);
+		
 		while(resultSet.next() && user == null) {
 			int authenticatedUserID = resultSet.getInt(1);
 			String authenticatedUserName = resultSet.getString(2);
@@ -27,35 +42,24 @@ public class AuthenticationDBConnection {
 				user = new AuthenticationUser(authenticatedUserID, authenticatedUserName, authenticatedUserPassword);
 			}
 		}
-		this.close();
+		
+		connection.close();
 		return user;
 	}
 	
-	public void insertAutenticationUser(AuthenticationUser user) throws NamingException, SQLException {
-		this.connect();
+	/**
+	 * Insert a user's information into the Authentication database.
+	 * @param user AuthenticationUer data structure containing the information to be entered.
+	 * @throws NamingException
+	 * @throws SQLException
+	 */
+	public static void insertAutenticationUser(AuthenticationUser user) throws NamingException, SQLException {
+		Connection connection = DBResource.connect(DB_RESOURCE);;
+		
 		String command = String.format("INSERT INTO Users (userName, password) VALUES (%s, %s)", user.getUserName(), user.getPassword());
 		Statement statement = connection.createStatement();
 		statement.executeUpdate(command);
-		this.close();
-	}
-	
-	private ResultSet getUsers() throws SQLException, NamingException {
-		String command = "SELECT * FROM Users";
-		return this.queryDB(command);
-	}
-	
-	private ResultSet queryDB(String command) throws SQLException, NamingException {
-		Statement statement = connection.createStatement();
-		ResultSet resultSet = statement.executeQuery(command);
-		return resultSet;
-	}
-	
-	private void connect() throws NamingException, SQLException {
-		connection = new DBResource(dbResource).connect();
-	}
-	
-	private void close() throws SQLException {
+		
 		connection.close();
-		connection = null;
 	}
 }

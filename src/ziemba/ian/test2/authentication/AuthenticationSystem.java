@@ -14,8 +14,6 @@ import javax.naming.NamingException;
  */
 public class AuthenticationSystem {
 	
-	private AuthenticationDBConnection dbConnection = new AuthenticationDBConnection();
-	
 	/**
 	 * Authenticates user name and password with information in the Authentication database.
 	 * @param userName User name to be checked with database.
@@ -24,12 +22,12 @@ public class AuthenticationSystem {
 	 * @throws RuntimeException Unable to authenticate the user name and password for some reason.
 	 * @see AuthenticationDBConnection
 	 */
-	public boolean authenticateUser(String userName, String password) throws RuntimeException {
+	public static boolean authenticateUser(String userName, String password) throws RuntimeException {
 		
 		// Get the user's information from the system
 		AuthenticationUser user;
 		try {
-			user = this.dbConnection.getAuthenticationUser(userName);
+			user = AuthenticationDBConnection.getAuthenticationUser(userName);
 		} catch (NamingException | SQLException e) {
 			throw new RuntimeException(e);
 		}
@@ -50,9 +48,9 @@ public class AuthenticationSystem {
 	 * @param user Information to be entered into the database.
 	 * @throws RuntimeException Unable to register the user from some reason.
 	 */
-	public void registerUser(AuthenticationUser user) throws RuntimeException {
+	public static void registerUser(AuthenticationUser user) throws RuntimeException {
 		try {
-			this.dbConnection.insertAutenticationUser(user);
+			AuthenticationDBConnection.insertAutenticationUser(user);
 		} catch (NamingException | SQLException e) {
 			throw new RuntimeException(e);
 		}
