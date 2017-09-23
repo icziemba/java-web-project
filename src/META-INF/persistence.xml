@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+     xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/persistence_1_0.xsd"
+     version="1.0" xmlns="http://java.sun.com/xml/ns/persistence">
+	<persistence-unit name="AuthenticationUser" transaction-type="RESOURCE_LOCAL">
+		<class>ziemba.ian.test2.authentication.AuthenticationUser</class>
+		<properties>
+			<property name="javax.persistence.jdbc.driver" value="org.mariadb.jdbc.Driver"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mariadb://localhost:3306/Authentication" />
+			<property name="javax.persistence.jdbc.user" value="root" />
+            <property name="javax.persistence.jdbc.password" value="password" />
+		</properties>
+	</persistence-unit>
+</persistence>

@@ -1,35 +1,47 @@
 package ziemba.ian.test2.authentication;
 
+import javax.persistence.Entity;
+import javax.persistence.Id;
+import javax.persistence.Table;
+
 /**
  * Class representation of the User table in the Authentication database. Each attribute of the
  * class should represent a row in the User table.
  * 
  * @author Ian Ziemba
  * @see AuthenticationSystem
- * @see AuthenticationDBConnection
  */
+
+@Entity
+@Table(name = "Users")
 public class AuthenticationUser {
 	
-	private int id = 0;
+	@Id
 	private String userName;
 	private String password;
+	private Long id;
 	
-	public AuthenticationUser(String userName, String password) {
-		this.userName = userName;
-		this.password = password;
+	public Long getId() {
+		return id;
 	}
-	
-	protected AuthenticationUser(int id, String userName, String password) {
+	public void setId(Long id) {
 		this.id = id;
-		this.userName = userName;
-		this.password = password;
 	}
-
 	public String getUserName() {
 		return userName;
 	}
-
+	public void setUserName(String userName) {
+		this.userName = userName;
+	}
 	public String getPassword() {
 		return password;
+	}
+	public void setPassword(String password) {
+		this.password = password;
+	}
+	
+	@Override
+	public String toString() {
+		return "AuthenticationUser [id=" + id + ", userName=" + userName + ", password=" + password + "]";
 	}
 }

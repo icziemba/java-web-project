@@ -24,8 +24,6 @@ public class Login extends HttpServlet {
 	 * @see HttpServlet#doGet(HttpServletRequest request, HttpServletResponse response)
 	 */
 	protected void doGet(HttpServletRequest request, HttpServletResponse response) throws ServletException, IOException {
-		
-		// Redirect to main page if http session is active
 		if(request.getSession(false) != null) {
 			gotoMain(response);
 		}
@@ -47,7 +45,6 @@ public class Login extends HttpServlet {
 		if(authenticated) {
 			HttpSession session = request.getSession(true);
 			session.setAttribute("userName", userName);
-			session.setMaxInactiveInterval(30);
 			gotoMain(response);
 		}
 		else {

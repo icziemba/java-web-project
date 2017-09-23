@@ -1,7 +1,8 @@
 package ziemba.ian.test2.authentication;
 
-import java.sql.SQLException;
-import javax.naming.NamingException;
+import javax.persistence.EntityManager;
+import javax.persistence.EntityManagerFactory;
+import javax.persistence.Persistence;
 
 /**
  * The AuthenticationSystem class is intended to provide authentication services for another
@@ -22,23 +23,22 @@ public class AuthenticationSystem {
 	 * @throws RuntimeException Unable to authenticate the user name and password for some reason.
 	 * @see AuthenticationDBConnection
 	 */
-	public static boolean authenticateUser(String userName, String password) throws RuntimeException {
+	public static boolean authenticateUser(String userName, String password) {
 		
-		// Get the user's information from the system
-		AuthenticationUser user;
-		try {
-			user = AuthenticationDBConnection.getAuthenticationUser(userName);
-		} catch (NamingException | SQLException e) {
-			throw new RuntimeException(e);
-		}
+		// Use the java persistence API (JPA) to create a object-relation mapping (ORM)
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("AuthenticationUser");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		AuthenticationUser user = em.find(AuthenticationUser.class, userName);
 		
 		// Verify user name and password matches entry in database
-		if(user != null) {
-			if(user.getUserName().contentEquals(userName) && user.getPassword().equals(password)) {
-				return true;
-			}
-		}
-		return false;
+		boolean isAuthenticated = user.getUserName().contentEquals(userName) && user.getPassword().equals(password);
+
+		// Shutdown the JPA connection
+		em.close();
+		emf.close();
+		
+		return isAuthenticated;
 	}
 	
 	/**
@@ -49,10 +49,17 @@ public class AuthenticationSystem {
 	 * @throws RuntimeException Unable to register the user from some reason.
 	 */
 	public static void registerUser(AuthenticationUser user) throws RuntimeException {
-		try {
-			AuthenticationDBConnection.insertAutenticationUser(user);
-		} catch (NamingException | SQLException e) {
-			throw new RuntimeException(e);
-		}
+		
+		// Use the java persistence API (JPA) to create a object-relation mapping (ORM)
+		EntityManagerFactory emf = Persistence.createEntityManagerFactory("AuthenticationUser");
+		EntityManager em = emf.createEntityManager();
+		em.getTransaction().begin();
+		
+		// Commit the user to the Authentication database
+		em.persist(user);
+		em.getTransaction().commit();
+		
+		em.close();
+		emf.close();
 	}
 }

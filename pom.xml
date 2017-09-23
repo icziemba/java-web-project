@@ -35,5 +35,10 @@
   		<artifactId>tomcat-servlet-api</artifactId>
   		<version>8.0.38</version>
   	</dependency>
+  	<dependency>
+  		<groupId>org.hibernate</groupId>
+  		<artifactId>hibernate-core</artifactId>
+  		<version>5.2.11.Final</version>
+  	</dependency>
   </dependencies>
 </project>
