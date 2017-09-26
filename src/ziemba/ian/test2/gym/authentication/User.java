@@ -17,7 +17,7 @@ import javax.persistence.Table;
 
 @Entity
 @Table(name = "User")
-@NamedNativeQuery(query = "SELECT * FROM User WHERE userName = ?", name = "find user by username", resultClass = User.class)
+@NamedNativeQuery(query = "SELECT * FROM User WHERE userName = ?", name = "find user by user name", resultClass = User.class)
 public class User {
 
 	@Id
@@ -75,8 +75,9 @@ public class User {
 	@Override
 	public boolean equals(Object obj) {
 		if(obj instanceof User) {
-			return getIdUser() == ((User) obj).getIdUser() && getUserName() == ((User) obj).getUserName() && getPassword() == ((User) obj).getPassword() 
-					&& getLevel() == ((User) obj).getLevel();
+			User user = (User) obj;
+			return getIdUser() == user.getIdUser() && getUserName().equals(user.getUserName()) && getPassword().equals(user.getPassword())
+					&& getLevel().equals(user.getLevel());
 		}
 		return false;
 	}
