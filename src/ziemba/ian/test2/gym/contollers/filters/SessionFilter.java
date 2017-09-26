@@ -1,4 +1,4 @@
-package ziemba.ian.test2.gym.servlet.filters;
+package ziemba.ian.test2.gym.contollers.filters;
 
 import java.io.IOException;
 

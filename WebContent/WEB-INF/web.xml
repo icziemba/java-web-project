@@ -20,4 +20,7 @@
   <session-config>
   	<session-timeout>60</session-timeout>
   </session-config>
+  <listener>
+  	<listener-class>ziemba.ian.test2.gym.listeners.EntityManagerFactoryListener</listener-class>
+  </listener>
 </web-app>

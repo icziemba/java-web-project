@@ -1,4 +1,4 @@
-package ziemba.ian.test2.gym.servlet;
+package ziemba.ian.test2.gym.controllers;
 
 import java.io.IOException;
 import java.io.PrintWriter;
@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ziemba.ian.test2.authentication.AuthenticationSystem;
+import ziemba.ian.test2.gym.authentication.AuthenticationSystem;
 
 /**
  * Servlet implementation class Login

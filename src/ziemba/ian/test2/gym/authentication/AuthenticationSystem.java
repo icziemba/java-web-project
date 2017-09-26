@@ -1,8 +1,13 @@
-package ziemba.ian.test2.authentication;
+package ziemba.ian.test2.gym.authentication;
+
+import java.util.List;
 
 import javax.persistence.EntityManager;
-import javax.persistence.EntityManagerFactory;
-import javax.persistence.Persistence;
+import javax.persistence.Query;
+
+
+import ziemba.ian.test2.gym.listeners.EntityManagerFactoryListener;
+import ziemba.ian.test2.gym.authentication.User;
 
 /**
  * The AuthenticationSystem class is intended to provide authentication services for another
@@ -11,7 +16,7 @@ import javax.persistence.Persistence;
  * 
  * @author Ian Ziemba
  * @see AuthenticationDBConnection
- * @see AuthenticationUser
+ * @see User
  */
 public class AuthenticationSystem {
 	
@@ -24,21 +29,8 @@ public class AuthenticationSystem {
 	 * @see AuthenticationDBConnection
 	 */
 	public static boolean authenticateUser(String userName, String password) {
-		
-		// Use the java persistence API (JPA) to create a object-relation mapping (ORM)
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("AuthenticationUser");
-		EntityManager em = emf.createEntityManager();
-		em.getTransaction().begin();
-		AuthenticationUser user = em.find(AuthenticationUser.class, userName);
-		
-		// Verify user name and password matches entry in database
-		boolean isAuthenticated = user.getUserName().contentEquals(userName) && user.getPassword().equals(password);
-
-		// Shutdown the JPA connection
-		em.close();
-		emf.close();
-		
-		return isAuthenticated;
+		User user = getUser(userName);
+		return user.getUserName().contentEquals(userName) && user.getPassword().equals(password);
 	}
 	
 	/**
@@ -48,11 +40,10 @@ public class AuthenticationSystem {
 	 * @param user Information to be entered into the database.
 	 * @throws RuntimeException Unable to register the user from some reason.
 	 */
-	public static void registerUser(AuthenticationUser user) throws RuntimeException {
+	public static void registerUser(User user) throws RuntimeException {
 		
-		// Use the java persistence API (JPA) to create a object-relation mapping (ORM)
-		EntityManagerFactory emf = Persistence.createEntityManagerFactory("AuthenticationUser");
-		EntityManager em = emf.createEntityManager();
+		// Use the java persistence API (JPA) to create a object-relation mapping (ORM));
+		EntityManager em = EntityManagerFactoryListener.createEntityManager();
 		em.getTransaction().begin();
 		
 		// Commit the user to the Authentication database
@@ -60,6 +51,19 @@ public class AuthenticationSystem {
 		em.getTransaction().commit();
 		
 		em.close();
-		emf.close();
+	}
+	
+	private static User getUser(String userName) {
+		// Use the java persistence API (JPA) to create a object-relation mapping (ORM)
+		EntityManager em = EntityManagerFactoryListener.createEntityManager();
+		
+		// Find the user by user name
+		Query query = em.createNamedQuery("find user by username");
+		query.setParameter(1, userName);
+		
+		Object user = query.getSingleResult();
+		em.close();
+		
+		return (User) user;
 	}
 }

@@ -1,8 +1,7 @@
-package ziemba.ian.test2.gym.servlet;
+package ziemba.ian.test2.gym.controllers;
 
 import java.io.IOException;
 
-import javax.servlet.RequestDispatcher;
 import javax.servlet.ServletException;
 import javax.servlet.annotation.WebServlet;
 import javax.servlet.http.HttpServlet;
@@ -12,7 +11,7 @@ import javax.servlet.http.HttpServletResponse;
 /**
  * Servlet implementation class Index
  */
-@WebServlet(description = "default web page", urlPatterns = { "/index" })
+@WebServlet(description = "default web page", urlPatterns = { "/index", "/index.html", "/index.jsp" })
 public class Index extends HttpServlet {
 	private static final long serialVersionUID = 1L;
        

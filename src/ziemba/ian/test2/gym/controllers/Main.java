@@ -1,4 +1,4 @@
-package ziemba.ian.test2.gym.servlet;
+package ziemba.ian.test2.gym.controllers;
 
 import java.io.IOException;
 
