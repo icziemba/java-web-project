@@ -6,12 +6,10 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import ziemba.ian.test2.gym.authentication.AuthenticationSystem;
 import ziemba.ian.test2.gym.authentication.User;
 import ziemba.ian.test2.gym.authentication.UserLevel;
 import ziemba.ian.test2.gym.listeners.EntityManagerFactoryListener;
 import ziemba.ian.test2.gym.users.Manager;
-import ziemba.ian.test2.gym.users.ManagerOperations;
 
 public class ManagerOperationsTest {
 
@@ -32,12 +30,12 @@ public class ManagerOperationsTest {
 	@Test
 	public void createDeleteManager() {
 		User user  = new User("icziemba", "password", UserLevel.ADMIN);
-		AuthenticationSystem.registerUser(user);
+		User.registerUser(user);
 		Manager manager = new Manager("Ian", "Ziemba", user);
-		ManagerOperations.registerManager(manager);
-		assertEquals("Manager not successfully entered into database", manager, ManagerOperations.getManager(user));
-		ManagerOperations.removeManager(manager);
-		assertEquals("Manager not successfully removed into database", null, ManagerOperations.getManager(user));
+		Manager.registerManager(manager);
+		assertEquals("Manager not successfully entered into database", manager, Manager.getManager(user));
+		Manager.removeManager(manager);
+		assertEquals("Manager not successfully removed into database", null, Manager.getManager(user));
 	}
 
 }

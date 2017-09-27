@@ -4,6 +4,7 @@ import java.io.Serializable;
 import javax.persistence.*;
 
 import ziemba.ian.test2.gym.authentication.User;
+import ziemba.ian.test2.gym.listeners.EntityManagerFactoryListener;
 
 /**
  * Entity implementation class for Entity: Manager
@@ -15,6 +16,8 @@ import ziemba.ian.test2.gym.authentication.User;
 @NamedNativeQuery(query = "SELECT * FROM Manager WHERE User_idUser = ?", name = "find manager by user", resultClass = Manager.class)
 public class Manager implements Serializable {
 
+	private static final long serialVersionUID = 1L;
+	
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long idManager;
@@ -76,5 +79,34 @@ public class Manager implements Serializable {
 	@Override
 	public boolean equals(Object obj) {
 		return toString().equals(obj.toString());
+	}
+	
+	public static void registerManager(Manager manager) {
+		EntityManager em = EntityManagerFactoryListener.createEntityManager();
+		em.getTransaction().begin();
+		em.persist(manager);
+		em.getTransaction().commit();
+		em.close();
+	}
+	
+	public static void removeManager(Manager manager) {
+		EntityManager em = EntityManagerFactoryListener.createEntityManager();
+		Manager removedUser = em.find(Manager.class, manager.getIdManager());
+		em.getTransaction().begin();
+		em.remove(removedUser);
+		em.getTransaction().commit();
+		em.close();
+	}
+	
+	public static Manager getManager(User user) {
+		EntityManager em = EntityManagerFactoryListener.createEntityManager();
+		Query query = em.createNamedQuery("find manager by user");
+		query.setParameter(1, user.getIdUser());
+		
+		try {
+			return (Manager) query.getSingleResult();
+		} catch(javax.persistence.NoResultException e) {
+			return null;
+		}
 	}
 }

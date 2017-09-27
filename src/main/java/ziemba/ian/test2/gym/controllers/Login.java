@@ -10,7 +10,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
-import ziemba.ian.test2.gym.authentication.AuthenticationSystem;
+import ziemba.ian.test2.gym.authentication.User;
 
 /**
  * Servlet implementation class Login
@@ -41,7 +41,7 @@ public class Login extends HttpServlet {
 		String password = request.getParameter("password");
 		PrintWriter out = response.getWriter();
 		
-		boolean authenticated = AuthenticationSystem.authenticateUser(userName, password);
+		boolean authenticated = User.authenticateUser(userName, password);
 		if(authenticated) {
 			HttpSession session = request.getSession(true);
 			session.setAttribute("userName", userName);
