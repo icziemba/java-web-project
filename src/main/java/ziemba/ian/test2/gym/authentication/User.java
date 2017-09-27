@@ -1,5 +1,7 @@
 package ziemba.ian.test2.gym.authentication;
 
+import java.io.Serializable;
+
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -18,7 +20,7 @@ import javax.persistence.Table;
 @Entity
 @Table(name = "User")
 @NamedNativeQuery(query = "SELECT * FROM User WHERE userName = ?", name = "find user by user name", resultClass = User.class)
-public class User {
+public class User implements Serializable {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)

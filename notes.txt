@@ -6,3 +6,5 @@ JPA http://www.oracle.com/webfolder/technetwork/jsc/xml/ns/persistence/index.htm
 How to handle enums with JPA:
 https://www.thoughts-on-java.org/jpa-21-type-converter-better-way-to/
 https://www.thoughts-on-java.org/jpa-21-how-to-implement-type-converter/
+
+JPA and hibernate: https://docs.jboss.org/hibernate/entitymanager/3.6/reference/en/html_single/#transactions-basics
